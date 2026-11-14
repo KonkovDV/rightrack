@@ -289,7 +289,8 @@ test.describe('экономика на цифрах клиента', () => {
 
   test('заголовок обещает срок, который выдерживают цифры клиента', async ({ page }) => {
     await page.goto('index.html');
-    const head = async () => (await page.locator('.eco').locator('xpath=preceding-sibling::h2').innerText()).replace(/\s+/g, ' ').trim();
+    // читаем textContent: innerText в Safari и Firefox по-разному склеивает слова, собранные из отдельных блоков
+    const head = async () => (await page.locator('.eco').locator('xpath=preceding-sibling::h2').textContent()).replace(/\s+/g, ' ').trim();
     expect(await head()).toBe('Чекап стоит меньше, чем две недели ожидания');
     await page.locator('#ct').scrollIntoViewIfNeeded();
     // школа уже ближе к сценарию: осторожный разрыв окупает чекап дольше двух недель

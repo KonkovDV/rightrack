@@ -461,6 +461,13 @@ body.mine .mine-chip{display:inline-flex}
 .circ .tag{white-space:nowrap}
 @media (max-width:1320px) and (min-width:1001px){.circ .tag{font-size:10px;letter-spacing:.06em;padding:5px 9px}}
 .path .st{display:block;padding-right:clamp(40px,4.4vw,70px)}
+/* на узком экране стрелка между карточками смотрит вниз без поворота и движения: поворот вместе с бесконечной анимацией закрывает страницу в мобильном Safari */
+@media (max-width:1000px){.flow .ar{transform:none!important;animation:none!important;font-size:0}.flow .ar::before{content:"↓";font-size:26px;line-height:1}}
+/* «кто это сделал»: четыре равные колонки, без стрелок */
+.whoq{grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:18px}
+.whoq b{font-size:14px;font-weight:600}.whoq a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.who{margin-top:18px}
+@media (max-width:1000px){.whoq{grid-template-columns:minmax(0,1fr);gap:10px}}
 </style>
 </head>
 <body>
@@ -494,6 +501,12 @@ body.mine .mine-chip{display:inline-flex}
     <div class="c rv" style="--d:.18s"><span class="ic" data-ic="home"></span><div class="big gold" data-cnt>6</div><p>страниц новой версии сайта собраны и работают: откроем через минуту</p></div>
   </div>
   <p class="lead rv" style="margin-top:28px;--d:.24s">Мы посмотрели на Right Track так, как вы смотрите на бизнес клиента: нашли узкие места и посчитали их цену. За полчаса на столе: цифры, отчёт, ходы и работающий сайт.</p>
+  <div class="hyp who rv" style="--d:.3s"><span class="n">Кто это сделал</span><div class="hyq whoq">
+    <span><small>Инженеры проверяемого ИИ</small><b>20+ открытых проектов на GitHub: <a href="https://github.com/KonkovDV" target="_blank" rel="noopener">KonkovDV</a></b></span>
+    <span><small>«Мандат»</small><b>39 правил сверяют доверенность, выписку и устав. Сомнение не становится «да»</b></span>
+    <span><small>«Контур»</small><b>Сверка документации по 132 параметрам. Вердикт ставит инспектор, не модель</b></span>
+    <span><small>Один принцип</small><b>Модель предлагает, правило проверяет, решает человек. Так устроен и ваш двойник</b></span>
+  </div></div>
 </div></section>
 
 <!-- 3 -->
@@ -797,10 +810,12 @@ let cur=-1;const mark=i=>{if(i===cur)return;cur=i;cnt.textContent=(i+1)+' / '+S.
 function count(el){const fin=el.textContent,m=fin.match(/^(\D*)(\d[\d  ]*)(.*)$/);if(!m||reduce)return;const n=+m[2].replace(/\D/g,''),t0=performance.now(),d=1200;
   (function f(t){const k=Math.min(1,(t-t0)/d);el.textContent=k<1?m[1]+Math.round(n*(1-Math.pow(1-k,4))).toLocaleString('ru-RU')+m[3]:fin;if(k<1)requestAnimationFrame(f)})(t0)}
 /* слайд раскрывается, как только входит в экран: высокие слайды на телефоне тоже */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const t=e.target;t.classList.add('in');io.unobserve(t);t.querySelectorAll('[data-cnt]').forEach(count);if(t.querySelector('#idx'))idx();if(t.querySelector('#sitefr'))live();setTimeout(()=>t.classList.add('done'),1800)}),{rootMargin:'0px 0px -10% 0px'});
+const show=t=>{if(t.classList.contains('in'))return;t.classList.add('in');io.unobserve(t);t.querySelectorAll('[data-cnt]').forEach(count);if(t.querySelector('#idx'))idx();if(t.querySelector('#sitefr'))live();setTimeout(()=>t.classList.add('done'),1800)};
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)show(e.target)}),{rootMargin:'0px 0px -10% 0px'});
 S.forEach(s=>io.observe(s));
 /* текущий слайд — тот, что пересекает середину экрана */
-let raf=0;const sync=()=>{raf=0;const m=innerHeight/2,i=S.findIndex(s=>{const r=s.getBoundingClientRect();return r.top<=m&&r.bottom>m});mark(i<0?(scrollY<1?0:S.length-1):i)};
+/* страховка для резкой прокрутки и восстановленной позиции: всё, что уже выше нижнего края экрана, раскрывается, даже если наблюдатель пропустил вход */
+let raf=0;const sync=()=>{raf=0;const m=innerHeight/2,lim=innerHeight*.9;let i=-1;S.forEach((s,k)=>{const r=s.getBoundingClientRect();if(r.top<lim)show(s);if(i<0&&r.top<=m&&r.bottom>m)i=k});mark(i<0?(scrollY<1?0:S.length-1):i)};
 addEventListener('scroll',()=>{raf||(raf=requestAnimationFrame(sync))},{passive:true});addEventListener('resize',sync);
 const go=i=>{i=Math.max(0,Math.min(S.length-1,i));S[i].scrollIntoView({behavior:'instant',block:'start'});mark(i)};
 sync();
