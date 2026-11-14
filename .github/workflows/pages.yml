@@ -1,0 +1,73 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Проверки (HTML, Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:html
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+        env:
+          RT_SECRETS: ${{ secrets.RT_SECRETS }}
+
+  browsers:
+    name: Safari и Firefox
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps webkit firefox
+      - run: npx playwright test --project=desktop-webkit --project=mobile-webkit --project=desktop-firefox
+        env:
+          ALL_BROWSERS: '1'
+
+  deploy:
+    name: Публикация
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Собрать сайт
+        run: |
+          mkdir _site
+          cp -r index.html 2_demo_otchet.html 2_demo_otchet.pdf 404.html favicon.svg apple-touch-icon.png og art site_v2 _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

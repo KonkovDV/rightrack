@@ -1,0 +1,20 @@
+{
+  "name": "rightrack",
+  "private": true,
+  "description": "Right Track: презентация, экспресс-отчёт и концепт сайта v.2",
+  "type": "module",
+  "scripts": {
+    "serve": "node tests/serve.mjs",
+    "pdf": "node tools/build-pdf.mjs",
+    "test": "playwright test",
+    "test:html": "html-validate index.html 2_demo_otchet.html 404.html site_v2/*.html",
+    "check": "npm run test:html && npm test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "axe-core": "4.14.0",
+    "fast-check": "4.10.2",
+    "html-validate": "11.21.1",
+    "pdf-lib": "1.17.1"
+  }
+}
