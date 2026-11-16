@@ -14,6 +14,12 @@ const ng = nextGroup();
 if (ng[0]) { const day = t => Math.floor((+t + 3 * 36e5) / 864e5), d = Math.max(0, day(ng[0]) - day(Date.now()));
   $('#chipNext').innerHTML = `<b>Групповой трекинг · ${fmt(ng[0])}</b><i>${d > 1 ? 'через ' + d + ' ' + pl(d, 'день', 'дня', 'дней') : d ? 'завтра' : 'сегодня'}, 19:00 МСК</i>` }
 
+/* ---------- портрет первого экрана: глубина за курсором ---------- */
+(function () { const box = $('#portrait'), hero = $('.hero'); if (!box || reduce || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  let q = 0, px = 0, py = 0; const put = () => { q = 0; box.style.setProperty('--px', px.toFixed(3)); box.style.setProperty('--py', py.toFixed(3)) };
+  hero.addEventListener('pointermove', e => { const r = box.getBoundingClientRect(); px = Math.max(-1, Math.min(1, (e.clientX - r.left - r.width / 2) / (innerWidth * .45))); py = Math.max(-1, Math.min(1, (e.clientY - r.top - r.height / 2) / (innerHeight * .6))); if (!q) q = requestAnimationFrame(put) });
+  hero.addEventListener('pointerleave', () => { px = py = 0; if (!q) q = requestAnimationFrame(put) }) })();
+
 /* ---------- поле потоков в первом экране ---------- */
 (function () { const cv = $('#flow'); if (!cv || reduce) return; const cx = cv.getContext('2d'); let W, H, D, ps = [], mx = -9999, my = -9999, run = true, t = 0;
   function size() { D = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * D; cv.height = H * D; cx.setTransform(D, 0, 0, D, 0, 0); cx.fillStyle = '#0b0a08'; cx.fillRect(0, 0, W, H);
@@ -105,7 +111,7 @@ qRender();
   const tq = $('#tq'), tqa = $('#tqa'), src = $('#tsrc'), wave = $('#wave'); if (!tq) return;
   tq.innerHTML = T.map((t, i) => `<button type="button" data-i="${i}">${t[0]}</button>`).join('');
   wave.innerHTML = '<i></i>'.repeat(16); const bars = $$('i', wave); let timer, wv;
-  const speak = on => { clearInterval(wv); if (on && !reduce) wv = setInterval(() => bars.forEach(b => b.style.height = 5 + Math.random() * 28 + 'px'), 110); else bars.forEach(b => b.style.height = '6px') };
+  const speak = on => { clearInterval(wv); RT.twin && RT.twin.speak(on); if (on && !reduce) wv = setInterval(() => bars.forEach(b => b.style.height = 5 + Math.random() * 28 + 'px'), 110); else bars.forEach(b => b.style.height = '6px') };
   function ask(i) { clearInterval(timer); $$('button', tq).forEach((b, k) => b.classList.toggle('on', k === i)); const [q, a, s] = T[i]; src.innerHTML = '';
     tqa.innerHTML = `<span class="q">${q}</span><span id="tt"></span><span class="cur"></span>`; const tt = $('#tt'); let n = 0; speak(true);
     const done = () => { clearInterval(timer); tt.textContent = a; speak(false); src.innerHTML = `<span>Источник: <b>${s}</b></span><span>По публичным материалам Александра</span>` };

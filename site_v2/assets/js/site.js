@@ -49,7 +49,7 @@ document.body.insertAdjacentHTML('afterbegin', `
   <nav aria-label="Основное меню">${NAV.map(([h, t]) => `<a href="${h}"${h === page ? ' class="on" aria-current="page"' : ''}>${t}</a>`).join('')}</nav>
   <a class="btn btn-gold btn-sm" href="index.html#diag">Найти узкое место</a>
   <button type="button" class="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="drawer" data-drawer><i></i></button>
-</div></header>
+</div><i class="prog" id="prog" aria-hidden="true"></i></header>
 <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Меню"><button type="button" class="x" data-drawer aria-label="Закрыть меню">✕</button>
   <nav aria-label="Меню">${NAV.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}<a href="index.html#diag" class="gold">Найти узкое место →</a></nav></div>`);
 const main = $('main'); if (main && !main.id) main.id = 'main';
@@ -99,7 +99,9 @@ document.body.insertAdjacentHTML('beforeend', `
 
 /* ---------- поведение ---------- */
 const nav = $('#nav'), mbar = $('#mbar');
-const onScroll = () => { nav.classList.toggle('s', scrollY > 30); mbar.classList.toggle('v', scrollY > innerHeight * .7 && scrollY < document.body.scrollHeight - innerHeight * 1.5) };
+const prog = $('#prog');
+const onScroll = () => { nav.classList.toggle('s', scrollY > 30); mbar.classList.toggle('v', scrollY > innerHeight * .7 && scrollY < document.body.scrollHeight - innerHeight * 1.5);
+  const max = document.documentElement.scrollHeight - innerHeight; prog.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, scrollY / max) : 0).toFixed(4) + ')' };
 addEventListener('scroll', onScroll, { passive: true }); onScroll();
 const store = { get: k => { try { return localStorage.getItem(k) } catch (e) { return null } }, set: (k, v) => { try { localStorage.setItem(k, v) } catch (e) { } } };
 const sess = { get: k => { try { return sessionStorage.getItem(k) } catch (e) { return null } }, set: (k, v) => { try { sessionStorage.setItem(k, v) } catch (e) { } } };

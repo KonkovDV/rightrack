@@ -34,7 +34,7 @@
   <div class="wrap">
     <div data-note="Первый экран|За пять секунд понятно, что здесь делают, для кого и с чего начать. Обе линии школы собраны в одно обещание.">
       <div class="eyebrow rv">Школа трекинга Александра Бакеева · с 2017 года</div>
-      <h1 class="rv" style="--d:.08s;margin-top:22px">Бизнес, который растёт <span class="serif gold">кратно</span>. Семья, которая строится на <span class="serif gold">144 года</span>.</h1>
+      <h1 class="rv" style="--d:.08s;margin-top:22px">Бизнес, который растёт <span class="serif gold">кратно</span>. Семья, которая строится на <span class="serif gold">144 года</span>.</h1>
       <p class="lead rv" style="--d:.16s">Трекинг — регулярная работа с собственником и командой: находим узкое место, проверяем гипотезы короткими циклами, закрепляем рост. Этому методу мы учим предпринимателей, руководителей и будущих трекеров.</p>
       <div class="cta rv" style="--d:.24s">
         <a href="#diag" class="btn btn-gold">Найти своё узкое место <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -48,16 +48,17 @@
         <div class="stat"><b data-n="80" data-s="+">80+</b><span>выпусков подкаста</span></div>
       </div>
     </div>
-    <div class="portrait rv" style="--d:.2s">
+    <div class="portrait rv" style="--d:.2s" id="portrait">
       <div class="ring"></div>
       <div class="chip c1"><b>«Сдвиг» · март 2026</b><i>все места проданы</i></div>
       <div class="chip c2" id="chipNext"><b>Групповой трекинг</b>онлайн, 19:00 МСК</div>
       <div class="ph">
-        <picture><source type="image/avif" srcset="assets/img/portrait.avif"><source type="image/webp" srcset="assets/img/portrait.webp"><img src="assets/img/portrait.jpg" alt="Александр Бакеев, основатель Right Track" width="470" height="472" fetchpriority="high"></picture>
-        <div class="pcap">
-          <p class="serif">«Помогаю сильным стать великими, а великим — добродетельными»</p>
-          <small>Александр Бакеев, мастер-трекер, основатель Right Track</small>
-        </div>
+        <div class="halo" aria-hidden="true"><i></i><i></i><i></i></div>
+        <picture><source type="image/avif" srcset="assets/img/hero-720.avif 720w, assets/img/hero.avif 1280w" sizes="(max-width: 1040px) 90vw, 440px"><source type="image/webp" srcset="assets/img/hero-720.webp 720w, assets/img/hero.webp 1280w" sizes="(max-width: 1040px) 90vw, 440px"><img class="fig" src="assets/img/hero-720.webp" alt="Александр Бакеев, основатель Right Track" width="1280" height="1280" fetchpriority="high"></picture>
+      </div>
+      <div class="pcap">
+        <p class="serif">«Помогаю сильным стать великими, а великим — добродетельными»</p>
+        <small>Александр Бакеев, мастер-трекер, основатель Right Track</small>
       </div>
     </div>
   </div>
@@ -190,8 +191,15 @@
       <p class="note rv">Дальше: свободный вопрос, голос и память о целях.</p>
     </div>
     <div class="twin rv" data-note="Цифровой двойник эксперта|Мировой тренд: Delphi привлекла $16 млн от Sequoia в июне 2025 года, а Scaling Up и Napster в феврале 2026 года объявили цифровых двойников коучей. Двойник отвечает только по материалам Александра и показывает источник.">
-      <header><img src="assets/img/portrait.jpg" alt="" width="56" height="56"><div><b>Александр Бакеев</b><small><i class="dot"></i>цифровой двойник</small></div><div class="wave" id="wave" aria-hidden="true"></div></header>
-      <div class="tqa" id="tqa" aria-live="polite"></div>
+      <header><picture><source type="image/webp" srcset="assets/img/avatar.webp"><img src="assets/img/avatar.jpg" alt="" width="56" height="56" loading="lazy" decoding="async"></picture><div><b>Александр Бакеев</b><small><i class="dot"></i>цифровой двойник</small></div><div class="wave" id="wave" aria-hidden="true"></div></header>
+      <div class="tbody">
+        <div class="tface" id="tface">
+          <picture><source type="image/avif" srcset="assets/img/profile.avif"><source type="image/webp" srcset="assets/img/profile.webp"><img class="tph" src="assets/img/profile.jpg" alt="" width="640" height="640" loading="lazy" decoding="async"></picture>
+          <canvas id="tcv" aria-hidden="true"></canvas>
+          <button type="button" class="tlab" id="tbtn" aria-pressed="false" title="Показать живой снимок"><b>6 321 точка</b><i>цифровая копия</i><u>живой снимок</u></button>
+        </div>
+        <div class="tqa" id="tqa" aria-live="polite"></div>
+      </div>
       <footer id="tsrc"></footer>
     </div>
   </div>
@@ -232,6 +240,7 @@
 </section>
 </main>
 <script src="assets/js/site.js"></script>
+<script src="assets/js/twin.js"></script>
 <script src="assets/js/home.js"></script>
 </body>
 </html>

@@ -120,6 +120,73 @@ test.describe('«Сдвиг»: бронь по правилам школы', () 
   });
 });
 
+test.describe('портреты основателя', () => {
+  const loaded = img => img.evaluate(el => el.complete && el.naturalWidth > 0);
+
+  test('первый экран: вырезанный портрет загружен и не закрыт плашками', async ({ page }) => {
+    await page.goto('site_v2/index.html');
+    const fig = page.locator('#portrait .fig');
+    await expect(fig).toHaveAttribute('alt', /Александр Бакеев/);
+    await expect.poll(() => loaded(fig)).toBe(true);
+    // лицо занимает середину карточки: плашки стоят по углам и не заходят на него
+    const box = await page.locator('#portrait .ph').boundingBox();
+    const face = { x: box.x + box.width * .36, y: box.y + box.height * .2, r: box.x + box.width * .7, b: box.y + box.height * .62 };
+    for (const chip of await page.locator('#portrait .chip').all()) {
+      const c = await chip.boundingBox();
+      const overlap = c.x < face.r && c.x + c.width > face.x && c.y < face.b && c.y + c.height > face.y;
+      expect(overlap, 'плашка на лице').toBe(false);
+    }
+    await expect(page.locator('#portrait .pcap')).toContainText('добродетельными');
+  });
+
+  test('цифровой двойник: профиль из точек, под ним живой снимок', async ({ page }) => {
+    await page.goto('site_v2/index.html');
+    const face = page.locator('#tface');
+    await face.scrollIntoViewIfNeeded();
+    await expect(face).toHaveClass(/\bon\b/);
+    expect(await page.evaluate(() => RT.twin.points)).toBe(6321);
+    // точки действительно нарисованы: на холсте есть непрозрачные пиксели
+    await expect.poll(() => page.evaluate(() => { const c = document.getElementById('tcv'), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 40) n++; return n }), { timeout: 8000 }).toBeGreaterThan(1500);
+    const btn = page.locator('#tbtn');
+    await expect(btn).toHaveAttribute('aria-pressed', 'false');
+    await expect(btn).toContainText('цифровая копия');
+    await btn.focus(); await page.keyboard.press('Enter');
+    await expect(face).toHaveClass(/\blive\b/);
+    await expect(btn).toHaveAttribute('aria-pressed', 'true');
+    await expect(btn).toContainText('живой снимок');
+    await expect.poll(() => loaded(page.locator('#tface .tph'))).toBe(true);
+    await page.keyboard.press('Enter');
+    await expect(btn).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('«Сдвиг»: блок об авторе методики со снимком и цитатой из канала', async ({ page }) => {
+    await page.goto('site_v2/shift.html#author');
+    const img = page.locator('#author .apic img');
+    await img.scrollIntoViewIfNeeded();
+    await expect.poll(() => loaded(img)).toBe(true);
+    await expect(page.locator('#author h2')).toContainText('ради');
+    await expect(page.locator('#author .aq figcaption')).toHaveText('Канал Александра, 13 октября 2026');
+    await expect(page.locator('#author a[href="index.html#twin"]')).toBeVisible();
+  });
+
+  test('клуб: первый экран — кадр онлайн-встречи с подписью', async ({ page }) => {
+    await page.goto('site_v2/club.html');
+    const img = page.locator('.phero .pic.call img');
+    await expect(img).toHaveAttribute('alt', /онлайн-встрече/);
+    await expect.poll(() => loaded(img)).toBe(true);
+    await expect(page.locator('.clive')).toContainText('19:00 МСК');
+    await expect(page.locator('.cname b')).toHaveText('Александр Бакеев');
+  });
+
+  test('линия прочтения в шапке растёт с прокруткой', async ({ page }) => {
+    await page.goto('site_v2/index.html');
+    const sx = () => page.evaluate(() => new DOMMatrixReadOnly(getComputedStyle(document.getElementById('prog')).transform).a);
+    expect(await sx()).toBeLessThan(.02);
+    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+    await expect.poll(sx).toBeGreaterThan(.97);
+  });
+});
+
 test.describe('расписание и клуб на фиктивных часах', () => {
   test('ближайшая встреча и отсчёт до неё', async ({ page }) => {
     await page.clock.install({ time: new Date('2026-11-20T10:00:00+03:00') });

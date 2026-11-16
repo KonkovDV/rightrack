@@ -121,6 +121,7 @@ h3{font-size:clamp(18px,1.5vw,22px);letter-spacing:-.02em;line-height:1.2}
 @media (max-height:880px) and (min-width:1001px){.wfl>div{font-size:12.5px;padding-top:8px}.wfl b{font-size:13.5px}.wf svg{max-height:30vh}.scale{margin-top:10px;padding:8px 14px 6px}.scale figcaption{margin-bottom:4px}.scale .sr{padding:1px 0;font-size:12.5px}.eco .wait{padding:10px 18px}.eco .wait b{font-size:clamp(20px,1.9vw,26px)}.eco .c small{margin-top:6px}}
 /* иллюстрации серии: гравюра золотом */
 .hero>div{position:relative;z-index:1}
+.twl{display:inline-block;margin-top:10px;font-size:14px;font-weight:700;color:var(--gold);border-bottom:1px solid rgba(255,200,30,.4);padding-bottom:1px}.twl:hover{border-color:var(--gold)}
 .twin-art{display:block;width:100%;height:clamp(110px,17vh,170px);object-fit:cover;object-position:50% 50%;border-radius:12px;margin-bottom:12px;border:1px solid rgba(255,200,30,.25)}
 @media (max-height:880px) and (min-width:1001px){.twin-art{height:clamp(90px,14vh,130px);margin-bottom:8px}}
 /* chrome */
@@ -398,14 +399,29 @@ main{position:relative;z-index:1}
 .orbit text.n{fill:var(--soft)}.orbit text.rl{fill:var(--mute);font-size:9.5px;letter-spacing:.14em;font-weight:700;paint-order:stroke;stroke:#0b0a08;stroke-width:6px}
 .orbit text.c1{fill:var(--gold);font-size:40px;letter-spacing:-.04em}.orbit text.c2{fill:var(--mute);font-size:9.5px;letter-spacing:.16em}
 /* сайт: живое окно */
-.sitew{display:grid;grid-template-columns:.78fr 1.22fr;gap:clamp(24px,4vw,64px);align-items:center}
-.sitew .lead{margin-bottom:28px}
-.brw{border:1px solid var(--line2);border-radius:18px;overflow:hidden;background:#14120c;box-shadow:0 60px 140px -60px rgba(255,190,30,.45),0 40px 90px -50px #000;transform:perspective(1600px) rotateY(-7deg) rotateX(2deg);transform-origin:0 50%;transition:transform .8s var(--ease),opacity .9s var(--ease),filter .9s var(--ease)}
-.in .brw.rv{transform:perspective(1600px) rotateY(-7deg) rotateX(2deg)}
-@media (hover:hover){.in .brw.rv:hover{transform:perspective(1600px) rotateY(-2deg) rotateX(0deg)}}
-.brb{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mute)}
-.brb i{width:9px;height:9px;border-radius:50%;background:#4d483d}.brb i:first-child{background:var(--gold)}
-.brb span{margin-left:10px;border:1px solid var(--line);border-radius:999px;padding:3px 14px;flex:1;text-align:center;max-width:340px}
+.sitew{display:grid;grid-template-columns:.62fr 1.38fr;gap:clamp(24px,4vw,64px);align-items:center}
+.sitew .lead{margin-bottom:18px}
+.dvs{position:relative;aspect-ratio:100/63;width:100%}
+.dv{position:absolute}
+.dv .scr{position:relative;overflow:hidden;background:var(--ink);container-type:size;border:6px solid #1b1914;box-shadow:0 0 0 1px rgba(255,255,255,.16),0 34px 80px -34px #000}
+.dv .scr>img:not(.brp){position:absolute;left:0;top:0;width:100%;height:auto;animation:dvscroll var(--t,30s) ease-in-out 2s infinite alternate;will-change:transform}
+@keyframes dvscroll{0%,5%{transform:translateY(0)}95%,100%{transform:translateY(calc(100cqh - 100%))}}
+.dmon{left:12%;top:0;width:76%;z-index:1}
+.dmon .scr{border-width:8px;border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.16),0 70px 160px -60px rgba(255,190,30,.55),0 40px 90px -50px #000}
+.dmon .neck{display:block;width:15%;aspect-ratio:10/4.6;margin:0 auto;background:linear-gradient(180deg,#14120d,#2c2921);clip-path:polygon(14% 0,86% 0,100% 100%,0 100%)}
+.dmon .foot{display:block;width:30%;height:6px;margin:0 auto;border-radius:8px 8px 2px 2px;background:linear-gradient(180deg,#48443a,#24221b)}
+.dlap{left:0;bottom:0;width:45%;z-index:3}
+.dlap .scr{aspect-ratio:16/10;border-radius:11px 11px 0 0;border-bottom-width:9px}
+.dlap .base{display:block;position:relative;height:10px;margin:0 -7%;border-radius:2px 2px 14px 14px;background:linear-gradient(180deg,#59554a,#25231c);box-shadow:0 18px 30px -12px #000}
+.dlap .base::after{content:"";position:absolute;left:50%;top:0;width:16%;height:4px;translate:-50% 0;border-radius:0 0 6px 6px;background:#17150f}
+.dtab{right:13.5%;bottom:1.5%;width:22.5%;z-index:2}
+.dtab .scr{aspect-ratio:3/4.1;border-radius:15px;border-width:7px}
+.dph{right:.5%;bottom:0;width:12.6%;z-index:4}
+.dph .scr{aspect-ratio:9/19.2;border-radius:17px;border-width:4px}
+.dph .isl{position:absolute;left:50%;top:9px;width:30%;height:5px;translate:-50% 0;border-radius:5px;background:#000;z-index:2}
+.dvl{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px;padding:0}
+.dvl li{font-size:12px;color:var(--mute);border:1px solid var(--line2);border-radius:999px;padding:5px 12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dvl b{color:var(--text);font-weight:700;margin-right:6px}
 .brv{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--ink)}
 .brp{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
 .brv iframe{position:absolute;left:0;top:0;width:1440px;height:900px;border:0;transform:scale(var(--k,.5));transform-origin:0 0;pointer-events:none;opacity:0;transition:opacity .8s}.brv iframe.on{opacity:1}
@@ -444,8 +460,8 @@ body.mine .mine-chip{display:inline-flex}
 .hyq small{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:600}
 .hyq b{display:block;font-size:15px;color:#fff;line-height:1.3;max-width:50ch}.hyq i{font-style:normal;color:var(--gold);font-size:20px}
 /* компактные высоты, телефон, печать, покой */
-@media (max-width:1000px){.rail{display:none}.ixr,.sitew,.dec,.circ{grid-template-columns:minmax(0,1fr)}.radw{max-width:340px;margin-inline:auto}.orbit{max-width:340px;width:100%;margin-inline:auto}.decd,.decr,.dec .btn{grid-column:auto;grid-row:auto}.br{grid-template-columns:1fr 110px}.br em{display:none}.brw,.in .brw.rv{transform:none}.hm .ar{display:none}}
-@media (max-width:760px){.brw,.hart{display:none}.hyp,.hyq{grid-template-columns:minmax(0,1fr)}.hyq{gap:10px}.hyq i{display:none}.hero>.hero-art{max-width:80%;height:62%;opacity:.38}.hm{gap:12px}.hm>div{flex:1 1 100%}.toast{bottom:20px;max-width:calc(100% - 32px);text-align:center}}
+@media (max-width:1000px){.rail{display:none}.ixr,.sitew,.dec,.circ{grid-template-columns:minmax(0,1fr)}.radw{max-width:340px;margin-inline:auto}.orbit{max-width:340px;width:100%;margin-inline:auto}.decd,.decr,.dec .btn{grid-column:auto;grid-row:auto}.br{grid-template-columns:1fr 110px}.br em{display:none}.dvs{max-width:640px;margin-inline:auto}.hm .ar{display:none}}
+@media (max-width:760px){.hart{display:none}.dph .isl{top:6px;height:3px}.dv .scr{border-width:4px}.dmon .scr{border-width:5px;border-radius:11px}.dtab .scr{border-radius:10px}.dph .scr{border-width:3px;border-radius:11px}.hyp,.hyq{grid-template-columns:minmax(0,1fr)}.hyq{gap:10px}.hyq i{display:none}.hero>.hero-art{max-width:80%;height:62%;opacity:.38}.hm{gap:12px}.hm>div{flex:1 1 100%}.toast{bottom:20px;max-width:calc(100% - 32px);text-align:center}}
 @media (max-height:560px){.rail{display:none}}
 @media (max-height:880px) and (min-width:1001px){.hm{margin-top:18px}.br .t{height:25px}.zq{padding:4px 0;font-size:13.5px}.zq small{font-size:12px}.zq b{font-size:17px}.zins{margin-top:8px;font-size:13px}.wf svg{max-height:32vh}.orbit svg{max-height:40vh}.dec{margin-top:14px;padding:12px 16px;gap:10px 18px}.dec button:not(.btn){padding:6px 14px;min-height:40px}.decr{padding-top:10px}.path .gn{font-size:clamp(56px,5.6vw,84px)}.hyp{padding:9px 16px;margin-top:10px}.hyq b{font-size:14px}.twin-art{object-position:50% 50%}}
 /* совсем низкий экран (1280×720) и узкий планшет: ещё плотнее, чтобы слайд помещался целиком */
@@ -593,7 +609,7 @@ body.mine .mine-chip{display:inline-flex}
     <div class="rv"><b>Сейчас</b><em>6,45 млн ₽</em><p>Линейка 2026 года: «Сдвиг», «Инструменты», клуб, практикумы.</p></div>
     <div class="rv" style="--d:.04s"><span class="n">01</span><b>Заполняемость и потоки</b><em>+0,51…3,32 млн ₽</em><p>Два потока 2026 разошлись почти полностью. В сценарии заложен третий.</p></div>
     <div class="rv" style="--d:.08s"><span class="n">02</span><b>Регулярный доход</b><em>+1,01…2,69 млн ₽</em><p>Клуб. Сейчас регулярно приходит около 10% выручки.</p></div>
-    <div class="rv" style="--d:.12s"><span class="n">03</span><b>Выпускники</b><em>+1,35…2,90 млн ₽</em><p>1000+ выпускников. Для них внутри школы есть следующий шаг.</p></div>
+    <div class="rv" style="--d:.12s"><span class="n">03</span><b>Выпускники</b><em>+1,35…2,90 млн ₽</em><p>1 000+ выпускников. Для них внутри школы есть следующий шаг.</p></div>
     <div class="rv" style="--d:.16s"><span class="n">04</span><b>Своя база контактов</b><em>+0,25…0,70 млн ₽</em><p>Практикумы собирают базу. Охват MAX — 86,3 млн в месяц, Telegram — 75,7. Mediascope, июнь 2026.</p></div>
     <div class="rv" style="--d:.2s"><b>Достижимо</b><em>9,57–16,06 млн ₽</em><p>Те же продукты и тот же спрос, без новых вложений в рекламу.</p></div>
     <div class="rv lk5" style="--d:.24s"><span class="n">05</span><b>Масштаб без основателя в зале</b><p class="kk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Механика и расчёт — в чекапе</p></div>
@@ -625,7 +641,7 @@ body.mine .mine-chip{display:inline-flex}
   <div class="flow">
     <div class="c rv"><span class="n">Что есть</span><ul><li>80+ выпусков подкаста</li><li>284 поста канала за год и более ранний архив</li><li>Программы «Сдвига» и «Инструментов трекинга»</li><li>Методичка, гайд «Как вырастить наследника», научные статьи 2026 года</li></ul></div>
     <div class="ar rv">→</div>
-    <div class="c core rv" style="--d:.1s"><img class="twin-art" src="art/twin.webp" alt="" aria-hidden="true" width="1040" height="420" loading="lazy" decoding="async"><h3>Цифровой двойник</h3><p>Текст и голос. Отвечает только по вашим материалам и показывает источник.</p><small style="font-size:12px;color:var(--mute);margin-top:8px;display:block">Scaling Up и Napster объявили двойников коучей в феврале 2026. Программа для коучей заявлена на конец года</small></div>
+    <div class="c core rv" style="--d:.1s"><img class="twin-art" src="art/twin.webp" alt="" aria-hidden="true" width="1040" height="420" loading="lazy" decoding="async"><h3>Цифровой двойник</h3><p>Текст и голос. Отвечает только по вашим материалам и показывает источник.</p><a class="twl" href="site_v2/index.html#twin" target="_blank">Спросить двойника →</a><small style="font-size:12px;color:var(--mute);margin-top:8px;display:block">Scaling Up и Napster объявили двойников коучей в феврале 2026. Программа для коучей заявлена на конец года</small></div>
     <div class="ar rv">→</div>
     <div class="c rv" style="--d:.2s"><span class="n">Что даёт</span><ul><li><b style="color:#fff">На сайте:</b> знакомство с методом за минуту и новый контакт</li><li><b style="color:#fff">В клубе:</b> ценность каждый день между встречами</li><li><b style="color:#fff">Отдельно:</b> подписка без часов основателя</li></ul></div>
   </div>
@@ -645,7 +661,7 @@ body.mine .mine-chip{display:inline-flex}
     <figure class="orbit rv"><svg id="orbit" viewBox="-160 -160 320 320" role="img" aria-label="Двенадцать источников на трёх кругах: четыре в своём, пять в партнёрском, три в новом. Девять уже ваши"></svg>
       <figcaption><span><i></i>9 уже ваши</span><span><i class="k0"></i>3 новых</span></figcaption></figure>
     <div class="c rv" style="--d:.06s"><span class="tag">Свой круг · первые недели</span><ol>
-      <li><i>1</i><span><b>Выпускники</b>1000+ человек, которые уже доверяют школе.</span></li>
+      <li><i>1</i><span><b>Выпускники</b>1 000+ человек, которые уже доверяют школе.</span></li>
       <li class="lk"><i>2</i><span><u></u></span></li><li class="lk"><i>3</i><span><u></u></span></li><li class="lk"><i>4</i><span><u></u><em>нулевая цена контакта</em></span></li></ol></div>
     <div class="c rv" style="--d:.12s"><span class="tag o">Партнёрский круг · 1–3 месяца</span><ol>
       <li><i>5</i><span><b>Премия «Трекер года»</b>Лауреаты, жюри и партнёры шести сезонов.</span></li>
@@ -661,12 +677,17 @@ body.mine .mine-chip{display:inline-flex}
 <section class="s" style="--gx:50%;--gy:60%"><div class="sitew">
   <div>
     <div class="eb rv">Сайт</div>
-    <h2 class="rv" style="max-width:14ch">Новая версия сайта Right Track. <span class="serif gold">Работает</span></h2>
+    <h2 class="rv" style="max-width:14ch">Новая версия сайта Right&nbsp;Track. <span class="serif gold">Работает</span></h2>
     <p class="lead rv">Шесть страниц: главная с диагностикой и цифровым двойником, «Сдвиг» с картой династии и бронью мест, клуб, программы, реестр трекеров. Клавиша <kbd>N</kbd> включает пояснения.</p>
+    <ul class="dvl rv" aria-label="Сайт проверен на четырёх экранах"><li><b>Монитор</b>1440</li><li><b>Ноутбук</b>1280</li><li><b>Планшет</b>820</li><li><b>Телефон</b>390</li></ul>
     <a class="btn rv" href="site_v2/index.html" target="_blank">Открыть сайт →</a>
   </div>
-  <div class="brw rv" style="--d:.15s"><div class="brb" aria-hidden="true"><i></i><i></i><i></i><span>Right Track · концепт сайта v.2</span></div>
-    <div class="brv" id="sitefr"><img class="brp" src="art/site.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><a class="brl" href="site_v2/index.html" target="_blank" aria-label="Открыть сайт в новой вкладке"></a></div></div>
+  <div class="dvs">
+    <div class="dv dmon rv" style="--d:.1s"><div class="brv scr" id="sitefr"><img class="brp" src="art/site.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><a class="brl" href="site_v2/index.html" target="_blank" aria-label="Открыть сайт в новой вкладке"></a></div><i class="neck"></i><i class="foot"></i></div>
+    <div class="dv dlap rv" style="--d:.28s"><div class="scr"><img src="art/site-laptop.webp" alt="" width="760" height="1959" loading="lazy" decoding="async" style="--t:30s"></div><i class="base"></i></div>
+    <div class="dv dtab rv" style="--d:.4s"><div class="scr"><img src="art/site-tablet.webp" alt="" width="440" height="2254" loading="lazy" decoding="async" style="--t:38s"></div></div>
+    <div class="dv dph rv" style="--d:.52s"><div class="scr"><img src="art/site-phone.webp" alt="" width="260" height="2000" loading="lazy" decoding="async" style="--t:34s"></div><i class="isl"></i></div>
+  </div>
 </div></section>
 
 <!-- 11: путь -->
@@ -786,7 +807,7 @@ body.mine .mine-chip{display:inline-flex}
     <p class="decn">Даты считаются по рабочим дням от выбранного понедельника и уточняются при старте.</p>
     <button type="button" class="btn" id="decC">Скопировать итог</button>
   </div>
-  <div class="tick loss rv"><span>С 1 января линейка недополучила прибыли. Счётчик идёт прямо сейчас</span><b id="cY2"></b></div>
+  <div class="tick loss rv"><span>Цена ожидания с 1 января: столько прибыли дал бы сценарий. Счётчик идёт прямо сейчас</span><b id="cY2"></b></div>
   <div class="tick dl rv" id="dl" hidden><span>Старт чекапа до <b style="font-size:inherit">1 декабря</b>: первый спринт закрывается до праздников, предзапись открывается в январе</span><b id="dlT"></b></div>
 </div></section>
 
@@ -927,7 +948,7 @@ cap(cx(6),'рычаг 05')})();
     for(let i=0;i<q;i++){n++;const a=-Math.PI/2+(i+.5)*2*Math.PI/q,x=(Math.cos(a)*r).toFixed(1),y=Math.sin(a)*r,nw=ri===2;h+=`<circle class="od${nw?' n':''}" style="--i:${n}" cx="${x}" cy="${y.toFixed(1)}" r="11"/><text${nw?' class="n"':''} x="${x}" y="${(y+4).toFixed(1)}">${n}</text>`}});
   sv.innerHTML=h+'<text class="c1" x="0" y="8">12</text><text class="c2" x="0" y="24">ИСТОЧНИКОВ</text>'})();
 /* живое окно сайта: в рамке лежит постер; сама страница подгружается, когда слайд открыт и презентация идёт из сети */
-const fr=$('#sitefr');function live(){if(!fr||fr.querySelector('iframe')||!/^https?:$/.test(location.protocol)||!fr.offsetWidth)return;const f=document.createElement('iframe');f.title='Живой просмотр новой версии сайта';f.tabIndex=-1;f.setAttribute('inert','');f.onload=()=>f.classList.add('on');f.src='site_v2/index.html';fr.insertBefore(f,fr.lastElementChild)}
+const fr=$('#sitefr');function live(){if(!fr||fr.querySelector('iframe')||!/^https?:$/.test(location.protocol)||!fr.offsetWidth||!matchMedia('(min-width:1001px)').matches)return;const f=document.createElement('iframe');f.title='Живой просмотр новой версии сайта';f.tabIndex=-1;f.setAttribute('inert','');f.onload=()=>f.classList.add('on');f.src='site_v2/index.html';fr.insertBefore(f,fr.lastElementChild)}
 if(fr){const fit=()=>fr.style.setProperty('--k',(fr.clientWidth/1440).toFixed(4));fit();if(window.ResizeObserver)new ResizeObserver(fit).observe(fr);else addEventListener('resize',fit)}
 /* решение: формат и ближайший понедельник дают срок готовности и текст для отправки */
 (function(){const box=$('#dec');if(!box)return;const MON=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],DOW=['вс','пн','вт','ср','чт','пт','сб'];

@@ -474,6 +474,27 @@ test.describe('графика', () => {
     await expect(page.locator('#sitefr iframe')).toHaveAttribute('inert', '');
   });
 
+  test('сайт на четырёх экранах: монитор, ноутбук, планшет и телефон со своими снимками', async ({ page }) => {
+    await page.goto('index.html#11');
+    await expect(page.locator('.dvs .dv')).toHaveCount(4);
+    const shots = page.locator('.dvs .scr img');
+    await expect(shots).toHaveCount(4);
+    expect(await shots.evaluateAll(els => els.map(e => e.getAttribute('src')))).toEqual(['art/site.webp', 'art/site-laptop.webp', 'art/site-tablet.webp', 'art/site-phone.webp']);
+    await expect.poll(() => shots.evaluateAll(els => els.every(e => e.complete && e.naturalWidth > 0))).toBe(true);
+    // устройства не вылезают за слайд и стоят в своём порядке: телефон правее планшета, ноутбук левее монитора
+    const b = async sel => page.locator(sel).boundingBox();
+    const [mon, lap, tab, ph, st] = [await b('.dmon'), await b('.dlap'), await b('.dtab'), await b('.dph'), await b('.dvs')];
+    expect(lap.x).toBeLessThan(mon.x); expect(ph.x).toBeGreaterThan(tab.x);
+    for (const d of [mon, lap, tab, ph]) { expect(d.x).toBeGreaterThanOrEqual(st.x - 1); expect(d.x + d.width).toBeLessThanOrEqual(st.x + st.width + 1) }
+    await expect(page.locator('.dvl li')).toHaveText(['Монитор1440', 'Ноутбук1280', 'Планшет820', 'Телефон390']);
+  });
+
+  test('слайд двойника ведёт к живому блоку «Спросите Александра»', async ({ page }) => {
+    await page.goto('index.html#9');
+    await expect(page.locator('.twl')).toHaveAttribute('href', 'site_v2/index.html#twin');
+    await expect(page.locator('img.twin-art')).toHaveAttribute('src', 'art/twin.webp');
+  });
+
   test('кратность роста: 2,5 в базовом сценарии и 1,5 в консервативном', async ({ page }) => {
     await page.goto('index.html');
     await expect(page.locator('#tX')).toHaveText('2,5');
