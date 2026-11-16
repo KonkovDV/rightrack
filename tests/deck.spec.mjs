@@ -465,7 +465,7 @@ test.describe('графика', () => {
     test.skip(isMobile, 'на телефоне рамка скрыта');
     await page.goto('index.html');
     await expect(page.locator('#sitefr iframe')).toHaveCount(0);
-    await expect(page.locator('#sitefr img.brp')).toHaveAttribute('src', 'art/site.webp');
+    await expect(page.locator('#sitefr img.brp')).toHaveAttribute('src', /^art\/site\.webp\?v=[0-9a-f]{8}$/);
     await page.goto('index.html#11');
     const fr = page.frameLocator('#sitefr iframe');
     await expect(fr.locator('.concept')).toHaveText('Концепт v.2');
@@ -479,7 +479,7 @@ test.describe('графика', () => {
     await expect(page.locator('.dvs .dv')).toHaveCount(4);
     const shots = page.locator('.dvs .scr img');
     await expect(shots).toHaveCount(4);
-    expect(await shots.evaluateAll(els => els.map(e => e.getAttribute('src')))).toEqual(['art/site.webp', 'art/site-laptop.webp', 'art/site-tablet.webp', 'art/site-phone.webp']);
+    expect(await shots.evaluateAll(els => els.map(e => e.getAttribute('src').split('?')[0]))).toEqual(['art/site.webp', 'art/site-laptop.webp', 'art/site-tablet.webp', 'art/site-phone.webp']);
     await expect.poll(() => shots.evaluateAll(els => els.every(e => e.complete && e.naturalWidth > 0))).toBe(true);
     // устройства не вылезают за слайд и стоят в своём порядке: телефон правее планшета, ноутбук левее монитора
     const b = async sel => page.locator(sel).boundingBox();
@@ -492,7 +492,7 @@ test.describe('графика', () => {
   test('слайд двойника ведёт к живому блоку «Спросите Александра»', async ({ page }) => {
     await page.goto('index.html#9');
     await expect(page.locator('.twl')).toHaveAttribute('href', 'site_v2/index.html#twin');
-    await expect(page.locator('img.twin-art')).toHaveAttribute('src', 'art/twin.webp');
+    await expect(page.locator('img.twin-art')).toHaveAttribute('src', /^art\/twin\.webp\?v=[0-9a-f]{8}$/);
   });
 
   test('кратность роста: 2,5 в базовом сценарии и 1,5 в консервативном', async ({ page }) => {
