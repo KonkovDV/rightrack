@@ -187,6 +187,63 @@ test.describe('портреты основателя', () => {
   });
 });
 
+test.describe('«Сдвиг»: метаанализ «Династия за сто лет»', () => {
+  test('цифры взяты из статьи, правила «70/90» на странице нет', async ({ page }) => {
+    await page.goto('site_v2/shift.html');
+    const cards = page.locator('.ev .card');
+    await expect(cards).toHaveCount(4);
+    expect((await cards.locator('.big').allInnerTexts()).map(t => t.replace(/[\u00a0\u202f]/g, ' '))).toEqual(['60%', '−18%', '600 лет', '$84,4 трлн']);
+    expect(await cards.locator('.lv').allInnerTexts()).toEqual(['B', 'A', 'A', 'B']);
+    await expect(page.locator('.evn')).toContainText('Династия за сто лет');
+    const body = await page.locator('main').innerText();
+    expect(body).not.toMatch(/70\s?%/);
+    expect(body).not.toContain('3 250 семей');
+    // цифра не вылезает из карточки
+    for (const c of await cards.all()) { const cb = await c.boundingBox(), nb = await c.locator('.big').boundingBox(); expect(nb.x + nb.width).toBeLessThanOrEqual(cb.x + cb.width) }
+  });
+
+  test('карта рисков: тринадцать сигналов, зоны и противоядия', async ({ page }) => {
+    await page.goto('site_v2/shift.html#risks');
+    await expect(page.locator('#rksig .rks')).toHaveCount(13);
+    await expect(page.locator('#rkgrid .rkc')).toHaveCount(25);
+    await expect(page.locator('#rkgrid [data-r]')).toHaveCount(13);
+    await expect(page.locator('#rkgrid .rkc.z2 [data-r]')).toHaveCount(4);
+    await expect(page.locator('#rkres')).toContainText('Пока ничего не отмечено');
+    const pick = async i => page.locator(`.rks[data-r="${i}"]`).click();
+    await pick(0);
+    await expect(page.locator('.rks[data-r="0"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#rkgrid [data-r="0"]')).toHaveClass(/on/);
+    await expect(page.locator('#rkres .rkt')).toHaveText('1 из 13 сигнал, из них 1 в критической зоне.');
+    await expect(page.locator('#rkres li').first()).toContainText('конкурсный отбор');
+    await pick(9); await pick(11);
+    await expect(page.locator('#rkres .rkt')).toHaveText('3 из 13 сигнала, из них 1 в критической зоне.');
+    for (const i of [1, 2, 3, 4]) await pick(i);
+    await expect(page.locator('#rkres .rkt')).toHaveText('7 из 13 сигналов, из них 4 в критической зоне.');
+    await expect(page.locator('#rkres li')).toHaveCount(4);
+    await expect(page.locator('#rkres .rkm')).toContainText('И ещё 3');
+    await pick(0);
+    await expect(page.locator('#rkgrid [data-r="0"]')).not.toHaveClass(/on/);
+    // заявка на метаанализ открывает то же окно с двумя полями
+    await page.locator('#risks [data-open]').click();
+    await expect(page.locator('#mtitle')).toHaveText('Метаанализ «Династия за сто лет»');
+  });
+
+  test('карта династии называет пять капиталов так же, как статья', async ({ page }) => {
+    await page.goto('site_v2/shift.html#map');
+    const caps = await page.locator('#caps').innerText();
+    for (const c of ['Финансовый', 'Социальный', 'Интеллектуальный', 'Человеческий', 'Смысловой']) expect(caps).toContain(c);
+  });
+
+  test('двойник первым отвечает цитатой из метаанализа и называет источник', async ({ page }) => {
+    await page.goto('site_v2/index.html');
+    await page.locator('#tqa').scrollIntoViewIfNeeded();
+    await expect(page.locator('#tq button')).toHaveCount(7);
+    await expect(page.locator('#tq button').first()).toHaveClass(/on/);
+    await expect(page.locator('#tsrc')).toContainText('Метаанализ «Династия за сто лет», ноябрь 2026', { timeout: 15000 });
+    await expect(page.locator('#tt')).toContainText('чем из-за рынка');
+  });
+});
+
 test.describe('расписание и клуб на фиктивных часах', () => {
   test('ближайшая встреча и отсчёт до неё', async ({ page }) => {
     await page.clock.install({ time: new Date('2026-11-20T10:00:00+03:00') });

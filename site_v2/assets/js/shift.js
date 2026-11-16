@@ -2,7 +2,7 @@
 (() => {
 'use strict';
 const { $, $$, toast } = RT;
-const CAP = ['Материальный', 'Социальный', 'Интеллектуальный', 'Человеческий', 'Культурный'], GEN = ['Вы', 'Дети', 'Внуки', 'Правнуки', 'Праправнуки'];
+const CAP = ['Финансовый', 'Социальный', 'Интеллектуальный', 'Человеческий', 'Смысловой'], GEN = ['Вы', 'Дети', 'Внуки', 'Правнуки', 'Праправнуки'];
 const Y0 = new Date().getFullYear(), val = [8, 6, 5, 4, 2], svg = $('#rings'), tip = $('#tip');
 const r0 = 74, rw = 38, gap = .045, yr = g => Y0 + Math.round(g * 28.8);
 const reach = v => Math.max(1, Math.min(5, Math.round(v / 2)));
@@ -86,4 +86,47 @@ $('#bgo').onclick = () => { const s = sum(); RT.open('Предзапись на 
 autoPick(); drawSeats(); relLabel(); sum();
 /* окно цены предзаписи: настоящая дата из настроек, блок исчезает после неё */
 const w = $('#preWin'); if (w && new Date(RT.CFG.presale.until) > new Date()) { w.hidden = false; RT.countdown($('#cdShift'), RT.CFG.presale.until) }
+})();
+
+/* ---------- карта рисков династии: самопроверка по метаанализу «Династия за сто лет» ---------- */
+/* риск, сигнал в семье, противоядие, источник, место на карте: частота 1–5 и ущерб 1–5 (оценка автора статьи) */
+(() => {
+'use strict';
+const { $, $$ } = RT;
+const grid = $('#rkgrid'), sig = $('#rksig'), res = $('#rkres'); if (!grid) return;
+const R = [
+  ['Наследник у руля без отбора', '«он же сын»', 'конкурсный отбор, опыт вне семьи', 'Pérez-González; Villalonga & Amit', 4, 4],
+  ['Молчание о деньгах и ценностях', 'о капитале узнают из завещания', 'регулярные семейные встречи', 'Williams & Preisser; Hughes; Cerulli', 5, 4],
+  ['Нет плана преемственности', '«ещё рано»', 'план за десять лет', 'UBS 2023, 2025', 4, 4],
+  ['Всё держится на основателе', 'связи и договорённости в одной голове', 'поэтапная передача связей', 'Fan', 4, 5],
+  ['Равносильные наследники без правил', 'три брата по 33%', 'органы, голосование, арбитр', 'Bertrand и др.', 3, 4],
+  ['Нет выхода из структуры', 'траст «навсегда»', 'правила выкупа долей', 'Fan', 2, 4],
+  ['Жёсткое наследственное право', 'обязательные доли пассивным наследникам', 'наследственное планирование', 'Ellul и др.', 3, 3],
+  ['Совет без независимых', 'совет директоров как семейный ужин', 'независимые директора', 'Anderson & Reeb, 2004', 3, 3],
+  ['Проедание и размывание', 'изъятия растут быстрее капитала', 'правило изъятий на душу', 'Piketty', 4, 3],
+  ['Закостенелость', 'старый бизнес защищают от конкуренции', 'портфель, семейный банк', 'Morck и др.; Korom', 2, 3],
+  ['Перегрев', 'долг и громкие поглощения', 'семь привычек устойчивости', 'BCG', 2, 5],
+  ['Наследники уходят из бизнеса', 'дети идут своим путём', 'признать пути, оставить в роде', 'UBS 2023', 4, 2],
+  ['Внешние шоки', 'геополитика, санкции, торговые войны', 'диверсификация, нематериальные капиталы', 'UBS 2025', 3, 5]
+];
+/* зоны карты, как в статье: критическая и опасная */
+const Z2 = ['4-5', '5-5', '4-4', '5-4'], Z1 = ['2-5', '3-5', '3-4', '3-3', '4-3', '5-3', '5-2'];
+const zone = i => { const k = R[i][4] + '-' + R[i][5]; return Z2.includes(k) ? 2 : Z1.includes(k) ? 1 : 0 };
+const on = new Set();
+let cells = '';
+for (let y = 5; y >= 1; y--) for (let x = 1; x <= 5; x++) { const k = x + '-' + y, here = R.map((r, i) => r[4] === x && r[5] === y ? i : -1).filter(i => i >= 0);
+  cells += `<div class="rkc${Z2.includes(k) ? ' z2' : Z1.includes(k) ? ' z1' : ''}">${here.map(i => `<i data-r="${i}">${i + 1}</i>`).join('')}</div>` }
+grid.innerHTML = cells;
+sig.innerHTML = R.map((r, i) => `<button type="button" class="rks" data-r="${i}" aria-pressed="false"><i>${i + 1}</i><span>${r[1]}<small>${r[0]}</small></span></button>`).join('');
+const pl = RT.pl;
+function render() {
+  $$('[data-r]', grid).forEach(d => d.classList.toggle('on', on.has(+d.dataset.r)));
+  $$('.rks', sig).forEach(b => { const v = on.has(+b.dataset.r); b.classList.toggle('on', v); b.setAttribute('aria-pressed', v) });
+  if (!on.size) { res.innerHTML = '<p class="rk0">Пока ничего не отмечено. Четыре риска из тринадцати лежат в критической зоне: они встречаются часто и бьют по роду сильнее всего.</p>'; return }
+  const list = [...on].sort((a, b) => zone(b) - zone(a) || a - b), crit = list.filter(i => zone(i) === 2).length;
+  res.innerHTML = `<p class="rkt"><b>${on.size} из 13</b> ${pl(on.size, 'сигнал', 'сигнала', 'сигналов')}${crit ? `, из них <b class="crit">${crit} в критической зоне</b>` : ''}.</p>
+  <ul>${list.slice(0, 4).map(i => `<li class="z${zone(i)}"><b>${R[i][0]}.</b> Противоядие: ${R[i][2]}.<small>${R[i][3]}</small></li>`).join('')}</ul>${list.length > 4 ? `<p class="rkm">И ещё ${list.length - 4}: полный разбор с порядком действий — на интенсиве.</p>` : ''}`;
+}
+sig.addEventListener('click', e => { const b = e.target.closest('.rks'); if (!b) return; const i = +b.dataset.r; on.has(i) ? on.delete(i) : on.add(i); render() });
+render();
 })();
